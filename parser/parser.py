@@ -183,22 +183,23 @@ class User:
                     self.error_data = False
 
 async def run_user(user, user_manager):
-    """
-    Метод для выполнения пользовательского процесса.
-
-    Args:
-        user (User): Пользователь для выполнения.
-        user_manager (UserManager): Менеджер пользователей.
-    """
     try:
-        await send_mess(f'Запущено для {user.user_id}', admins)
         async with aiohttp.ClientSession() as session:
+            # Создайте экземпляр UserAgent для этой сессии
+            user_agent = UserAgent()
+
             access_token = await user.authorize(session)
             if access_token:
                 while await is_running(user.user_id):
                     if await sufficient_balance(user.user_id):
                         for number_machine, name_machine in zip(user.numbers_machines, user.names_machines):
-                            success = await user.fetch_page(session, access_token, number_machine, name_machine)
+                            # Используйте user-agent в заголовках запроса
+                            headers = {
+                                'Authorization': f'Bearer {access_token}',
+                                'User-Agent': user_agent.random
+                            }
+
+                            success = await user.fetch_page(session, access_token, number_machine, name_machine, headers)
                             if not success:
                                 access_token = await user.authorize(session)
                                 if not access_token:
