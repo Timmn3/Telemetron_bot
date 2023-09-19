@@ -183,23 +183,22 @@ class User:
                     self.error_data = False
 
 async def run_user(user, user_manager):
-    try:
-        async with aiohttp.ClientSession() as session:
-            # Создайте экземпляр UserAgent для этой сессии
-            user_agent = UserAgent()
+    """
+    Метод для выполнения пользовательского процесса.
 
+    Args:
+        user (User): Пользователь для выполнения.
+        user_manager (UserManager): Менеджер пользователей.
+    """
+    try:
+        await send_mess(f'Запущено для {user.user_id}', admins)
+        async with aiohttp.ClientSession() as session:
             access_token = await user.authorize(session)
             if access_token:
                 while await is_running(user.user_id):
                     if await sufficient_balance(user.user_id):
                         for number_machine, name_machine in zip(user.numbers_machines, user.names_machines):
-                            # Используйте user-agent в заголовках запроса
-                            headers = {
-                                'Authorization': f'Bearer {access_token}',
-                                'User-Agent': user_agent.random
-                            }
-
-                            success = await user.fetch_page(session, access_token, number_machine, name_machine, headers)
+                            success = await user.fetch_page(session, access_token, number_machine, name_machine)
                             if not success:
                                 access_token = await user.authorize(session)
                                 if not access_token:
@@ -213,12 +212,14 @@ async def run_user(user, user_manager):
                     await send_mess('Отстановлено!', user.send_users_id)
                     # Удаление экземпляра пользователя из списка
                     user_manager.users.remove(user)
+    except aiohttp.client_exceptions.ClientConnectorError:
+        # Перезапустить сессию для этого пользователя
+        await run_user(user, user_manager)
+        await send_mess(f'Перезапуск сессии {user.user_id}', admins)
     except Exception as e:
         # Обработка исключений, которые могут возникнуть во время запроса
         logger.error(f"Ошибка подключения: {e}")
         await send_mess(f'Ошибка подключения {user.user_id}', admins)
-        # Перезапустить сессию для этого пользователя
-        await run_user(user, user_manager)
 
 
 class UserManager:
