@@ -22,7 +22,7 @@ async def send_report_to_user(user):
                 total_cups += count
                 await send_mess(f"#{location}: <i>{count} чашек, на сумму </i><b>{stats['sum']} ₽</b>", user)
 
-            await send_mess(f"<u>Всего чашек:</u> {total_cups}\n<u>Общая сумма:</u> <b>{total_sum} ₽</b>", user)
+            await send_mess(f"<u>#Всего_чашек:</u> {total_cups}\n<u>#Общая_сумма:</u> <b>{total_sum} ₽</b>", user)
     except AttributeError:
         logger.error('Ошибка send_report_to_user')
 
