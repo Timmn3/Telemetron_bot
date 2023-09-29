@@ -212,6 +212,7 @@ async def run_user(user, user_manager):
                     await send_mess('Отстановлено!', user.send_users_id)
                     # Удаление экземпляра пользователя из списка
                     user_manager.users.remove(user)
+
     except aiohttp.client_exceptions.ClientConnectorError:
         # Перезапустить сессию для этого пользователя
         await run_user(user, user_manager)
