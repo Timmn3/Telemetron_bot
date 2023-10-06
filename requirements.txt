@@ -30,3 +30,4 @@ psycopg2~=2.9.5
 gino~=1.0.1
 pyQiwiP2P~=2.0.6
 aiocron~=1.8
+fake-useragent~=1.2.1

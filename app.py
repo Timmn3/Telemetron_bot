@@ -1,6 +1,7 @@
 from utils.db_api.quick_commands import delete_all_sales, balance_daily_write_off, reset_all_users_is_run
 import aiocron
 
+
 async def on_startup(dp):
     from loguru import logger
     logger.add("file.log", format="{time} {level} {message}", level="DEBUG", rotation="50 MB", compression="zip")

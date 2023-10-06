@@ -1,9 +1,11 @@
-""" стартует всех пользователей """
+""" Стартует всех пользователей """
+
 from message.send_mess import send_mess
 from parser.formation import creation
 from parser.parser import run_main_parser
 from utils.db_api.quick_commands import select_users_with_nonempty_machines, db_run_stop, get_user_data_for_pars
 from loguru import logger
+
 
 async def start_all_users():
     # получаем пользователей у которых есть автоматы и положительный баланс

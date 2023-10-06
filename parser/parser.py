@@ -56,7 +56,7 @@ class User:
         self.time_update = time_update
         self.report_time = report_time
         self.send_users_id = send_users_id
-        self.no_sales = False  # Флаг для отслеживания вывода информации о отсутствии продаж
+        self.no_sales = False  # Флаг для отслеживания вывода информации об отсутствии продаж
         self.first_run = True  # Флаг для отслеживания первого запуска парсера
         self.machines_count = len(numbers_machines)  # Количество машин пользователя
 
@@ -181,6 +181,7 @@ class User:
                 if self.error_data:
                     await send_mess(f"#{name_machine}: нет данных", self.send_users_id)
                     self.error_data = False
+
 
 async def run_user(user, user_manager):
     """
