@@ -210,7 +210,7 @@ async def run_user(user, user_manager):
                         await send_mess('У вас недостаточно средств на счету!', user.send_users_id)
                         await db_run_stop(user.user_id, False)
                 else:
-                    await send_mess('Отстановлено!', user.send_users_id)
+                    await send_mess('Остановлено!', user.send_users_id)
                     # Удаление экземпляра пользователя из списка
                     user_manager.users.remove(user)
 

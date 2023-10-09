@@ -423,7 +423,7 @@ async def check_args(args, user_id: int):
         logger.exception('Ошибка при проверке аргументов')
 
 async def balance_daily_write_off():
-    """ ежедневное списание остатка """
+    """ Ежедневное списание остатка """
     try:
         users = await User_data.query.gino.all()
         for user in users:

@@ -1,3 +1,4 @@
+from parser.restart_parser import restart_parser_for_all
 from utils.db_api.quick_commands import delete_all_sales, balance_daily_write_off, reset_all_users_is_run
 import aiocron
 
@@ -42,6 +43,8 @@ async def on_startup(dp):
     aiocron.crontab('0 0 * * *', func=delete_all_sales, start=True)  # 15:43 '43 15 * * *',
     # снятие баланса
     aiocron.crontab('0 0 * * *', func=balance_daily_write_off, start=True)
+    # перезапуск бота
+    aiocron.crontab('1 0 * * *', func=restart_parser_for_all, start=True)  # в 00:01
 
 if __name__ == '__main__':
     from aiogram import executor  # импортируем executor для запуска поллинга
