@@ -31,13 +31,14 @@ class User:
     Класс, представляющий пользователя с его параметрами и методами.
     """
 
-    def __init__(self, user_id, email, password, numbers_machines, names_machines, time_update, report_time,
-                 send_users_id):
+    def __init__(self, *args):
         """
         Инициализация пользователя.
 
         Args:
-            user_id (int): ID пользователей.
+            *args: Переменное количество аргументов, переданных при создании экземпляра класса.
+
+            user_id (int): ID пользователя.
             email (str): Имя пользователя.
             password (str): Пароль пользователя.
             numbers_machines (list): Список номеров машин.
@@ -48,17 +49,12 @@ class User:
         """
         self.error_data = True
         self.last_data = None
-        self.user_id = user_id
-        self.username = email
-        self.password = password
-        self.numbers_machines = numbers_machines
-        self.names_machines = names_machines
-        self.time_update = time_update
-        self.report_time = report_time
-        self.send_users_id = send_users_id
+        self.user_id, self.username, self.password, self.numbers_machines, self.names_machines, self.time_update, \
+            self.report_time, self.send_users_id = args
+
         self.no_sales = False  # Флаг для отслеживания вывода информации об отсутствии продаж
         self.first_run = True  # Флаг для отслеживания первого запуска парсера
-        self.machines_count = len(numbers_machines)  # Количество машин пользователя
+        self.machines_count = len(self.numbers_machines)  # Количество машин пользователя
 
     async def authorize(self, session):
         """
@@ -266,14 +262,12 @@ class UserManager:
             await asyncio.sleep(60)  # Проверяем каждую минуту
 
 
-async def main_parser(users_data_main):
+async def run_main_parser(users_data_main):
     user_manager = UserManager()
 
     for user_data in users_data_main:
-        user_id, email, password, numbers_machines, names_machines, time_update, report_time, send_users_id = user_data
-
         # Создание пользователей
-        user = User(user_id, email, password, numbers_machines, names_machines, time_update, report_time, send_users_id)
+        user = User(*user_data)
 
         # Добавление пользователей в менеджер
         user_manager.add_user(user)
@@ -286,15 +280,11 @@ async def main_parser(users_data_main):
     await asyncio.gather(*tasks)
 
 
-async def run_main_parser(users_data_pars):
-    await main_parser(users_data_pars)
-
-
 if __name__ == '__main__':
     users_data = [
         (1086439015, 'golana127@mail.ru', 'dM1pbiSwi8', [40953, 42391], ['Тц_Светлый', 'Дагестан'], 60, "22:00",
          [1089138631, 5669831950]),
-            (1089138631, 'remli.vasily@mail.ru', 'GI74ysHBxz', ['37227', '39121'], ['Карла_Маркса', 'Державинская'], 60,
+        (1089138631, 'remli.vasily@mail.ru', 'GI74ysHBxz', ['37227', '39121'], ['Карла_Маркса', 'Державинская'], 60,
          '13:00', [1089138631, 5669831950])
     ]
 
