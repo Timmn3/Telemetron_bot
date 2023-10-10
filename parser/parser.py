@@ -203,6 +203,7 @@ async def run_user(user, user_manager):
                                 if not access_token:
                                     logger.error("Не удалось выполнить повторную авторизацию")
                                     break
+                        await send_report(user.send_users_id, user.report_time)  # отправка отчета пользователю
                         await asyncio.sleep(user.time_update)
                     else:
                         await send_mess('У вас недостаточно средств на счету!', user.send_users_id)
@@ -220,6 +221,18 @@ async def run_user(user, user_manager):
         # Обработка исключений, которые могут возникнуть во время запроса
         logger.error(f"Ошибка подключения: {e}")
         await send_mess(f'Ошибка подключения {user.user_id}', admins)
+
+
+async def send_report(users, report_time):
+    """
+    Метод для отправки отчета всем пользователям в заданное время.
+    """
+    current_time = datetime.datetime.now().strftime('%H:%M')
+
+    for user in users:
+        if report_time == current_time and await is_running(user):
+            # Отправка отчета пользователю
+            await send_report_to_user(user)
 
 
 class UserManager:
@@ -249,20 +262,6 @@ class UserManager:
         tasks = [run_user(user, self) for user in self.users]
         await asyncio.gather(*tasks)
 
-    async def send_report(self):
-        """
-        Метод для отправки отчета всем пользователям в заданное время.
-        """
-        while True:
-            current_time = datetime.datetime.now().strftime('%H:%M')
-
-            for user in self.users:
-                if user.report_time == current_time and await is_running(user.user_id):
-                    # Отправка отчета пользователю
-                    await send_report_to_user(user.user_id)
-
-            await asyncio.sleep(60)  # Проверяем каждую минуту
-
 
 async def run_main_parser(users_data_main):
     user_manager = UserManager()
@@ -275,8 +274,7 @@ async def run_main_parser(users_data_main):
         user_manager.add_user(user)
 
     tasks = [
-        user_manager.run(),
-        user_manager.send_report()
+        user_manager.run()
     ]
 
     await asyncio.gather(*tasks)
