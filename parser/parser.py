@@ -229,8 +229,8 @@ async def send_report(users, report_time):
     """
     current_time = datetime.datetime.now().strftime('%H:%M')
 
-    for user in users:
-        if report_time == current_time and await is_running(user):
+    if report_time == current_time:
+        for user in users:
             # Отправка отчета пользователю
             await send_report_to_user(user)
 
