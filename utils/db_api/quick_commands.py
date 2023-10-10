@@ -35,7 +35,7 @@ async def get_tg_first_name(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении tg_first_name пользователя')
+        logger.exception(f'Ошибка при получении tg_first_name пользователя: {e}')
 
 
 async def select_users_with_nonempty_machines():
@@ -76,7 +76,7 @@ async def delete_all_sales():
             await user.update(sales='').apply()
         return True
     except Exception as e:
-        logger.exception('Ошибка при удалении данных по продажам')
+        logger.exception(f'Ошибка при удалении данных по продажам: {e}')
         return False
 
 
@@ -85,7 +85,7 @@ async def select_user(user_id):
         user = await User_data.query.where(User_data.user_id == user_id).gino.first()
         return user
     except Exception as e:
-        logger.exception('Ошибка при выборе пользователя')
+        logger.exception(f'Ошибка при выборе пользователя: {e}')
 
 
 async def get_sales(user_id):
@@ -96,7 +96,7 @@ async def get_sales(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении данных по продажам')
+        logger.exception(f'Ошибка при получении данных по продажам: {e}')
 
 
 async def add_sales_to_database(user_id: int, new_string: str):
@@ -117,7 +117,7 @@ async def add_sales_to_database(user_id: int, new_string: str):
             await user.update(sales=sales).apply()
             return True
     except Exception as e:
-        logger.exception('Ошибка при добавлении продажи')
+        logger.exception(f'Ошибка при добавлении продажи: {e}')
 
 
 async def db_change_sales(user_id: int, new_data: dict):
@@ -126,7 +126,7 @@ async def db_change_sales(user_id: int, new_data: dict):
         user = await select_user(user_id)
         await user.update(sales=new_data).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении данных о продажах')
+        logger.exception(f'Ошибка при изменении данных о продажах: {e}')
 
 
 async def db_get_sales(user_id: int):
@@ -136,7 +136,7 @@ async def db_get_sales(user_id: int):
         sales = user.sales
         return sales
     except Exception as e:
-        logger.exception('Ошибка при изменении количества продаж')
+        logger.exception(f'Ошибка при изменении количества продаж: {e}')
 
 
 async def db_clear_sales(user_id: int):
@@ -145,7 +145,7 @@ async def db_clear_sales(user_id: int):
         user = await select_user(user_id)
         await user.update(sales='').apply()
     except Exception as e:
-        logger.exception('Ошибка при очистке количества продаж')
+        logger.exception(f'Ошибка при очистке количества продаж: {e}')
 
 
 async def db_run_stop(user_id: int, value: bool):
@@ -154,7 +154,7 @@ async def db_run_stop(user_id: int, value: bool):
         user = await select_user(user_id)
         await user.update(is_run=value).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении is_run пользователя')
+        logger.exception(f'Ошибка при изменении is_run пользователя: {e}')
 
 
 async def reset_all_users_is_run():
@@ -162,7 +162,7 @@ async def reset_all_users_is_run():
     try:
         await User_data.update.values(is_run=False).gino.status()
     except Exception as e:
-        logger.exception('Ошибка при сбросе поля is_run для всех пользователей')
+        logger.exception(f'Ошибка при сбросе поля is_run для всех пользователей: {e}')
 
 
 async def is_running(user_id: int):
@@ -174,7 +174,7 @@ async def is_running(user_id: int):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении состояния is_run пользователя')
+        logger.exception(f'Ошибка при получении состояния is_run пользователя: {e}')
 
 
 async def delete_machine(user_id: int, machine_number: str):
@@ -196,7 +196,7 @@ async def delete_machine(user_id: int, machine_number: str):
                 name_machines=', '.join(name_machines_list)
             ).apply()
     except Exception as e:
-        logger.exception('Ошибка при удалении номера машины и названия машины')
+        logger.exception(f'Ошибка при удалении номера машины и названия машины: {e}')
 
 
 async def update_machines(user_id: int, number_machines: str, name_machines: str):
@@ -217,7 +217,7 @@ async def update_machines(user_id: int, number_machines: str, name_machines: str
             name_machines=name,
         ).apply()
     except Exception as e:
-        logger.exception('Ошибка при обновлении всех параметров пользователя')
+        logger.exception(f'Ошибка при обновлении всех параметров пользователя: {e}')
 
 
 async def get_user_data(user_id):
@@ -236,7 +236,7 @@ async def get_user_data(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении данных пользователя')
+        logger.exception(f'Ошибка при получении данных пользователя: {e}')
 
 
 async def get_user_data_for_pars(user_id):
@@ -261,7 +261,7 @@ async def get_user_data_for_pars(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении данных пользователя')
+        logger.exception(f'Ошибка при получении данных пользователя: {e}')
 
 
 async def get_number_machines(user_id):
@@ -272,7 +272,7 @@ async def get_number_machines(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении данных номеров автоматов')
+        logger.exception(f'Ошибка при получении данных номеров автоматов: {e}')
 
 
 async def get_names_machines(user_id):
@@ -283,7 +283,7 @@ async def get_names_machines(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении данных имен автоматов')
+        logger.exception(f'Ошибка при получении данных имен автоматов: {e}')
 
 
 async def change_user_email(user_id: int, new_email: str):
@@ -291,7 +291,7 @@ async def change_user_email(user_id: int, new_email: str):
         user = await select_user(user_id)
         await user.update(email=new_email).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении email пользователя')
+        logger.exception(f'Ошибка при изменении email пользователя: {e}')
 
 
 async def get_user_email(user_id: int):
@@ -302,7 +302,7 @@ async def get_user_email(user_id: int):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при запросе email пользователя')
+        logger.exception(f'Ошибка при запросе email пользователя: {e}')
 
 
 async def change_user_password(user_id: int, new_password: str):
@@ -310,7 +310,7 @@ async def change_user_password(user_id: int, new_password: str):
         user = await select_user(user_id)
         await user.update(password=new_password).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении пароля пользователя')
+        logger.exception(f'Ошибка при изменении пароля пользователя: {e}')
 
 
 async def change_user_number_machines(user_id: int, old_machine, new_number_machines: str):
@@ -326,7 +326,7 @@ async def change_user_number_machines(user_id: int, old_machine, new_number_mach
         new_number_machines = ', '.join(number_machines_list)
         await user.update(number_machines=new_number_machines).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении номеров автоматов пользователя')
+        logger.exception(f'Ошибка при изменении номеров автоматов пользователя: {e}')
 
 
 async def change_user_name_machines(user_id: int, number_machine, new_name_machines: str):
@@ -346,7 +346,7 @@ async def change_user_name_machines(user_id: int, number_machine, new_name_machi
                 name_machines=', '.join(name_machines_list)
             ).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении названий автоматов пользователя')
+        logger.exception(f'Ошибка при изменении названий автоматов пользователя: {e}')
 
 
 async def change_user_report_time(user_id: int, new_report_time: str):
@@ -354,7 +354,7 @@ async def change_user_report_time(user_id: int, new_report_time: str):
         user = await select_user(user_id)
         await user.update(report_time=new_report_time).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении времени отчета пользователя')
+        logger.exception(f'Ошибка при изменении времени отчета пользователя: {e}')
 
 
 async def change_user_other_users(user_id: int, new_other_users: str):
@@ -362,7 +362,7 @@ async def change_user_other_users(user_id: int, new_other_users: str):
         user = await select_user(user_id)
         await user.update(other_users=new_other_users).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении других пользователей пользователя')
+        logger.exception(f'Ошибка при изменении других пользователей пользователя: {e}')
 
 
 async def get_user_number_machines(user_id):
@@ -373,7 +373,7 @@ async def get_user_number_machines(user_id):
         else:
             return None
     except Exception as e:
-        logger.exception('Ошибка при получении number_machines пользователя')
+        logger.exception(f'Ошибка при получении number_machines пользователя: {e}')
 
 
 async def update_user(user_id: int, email: str, password: str, number_machines: str, name_machines: str,
@@ -388,7 +388,7 @@ async def update_user(user_id: int, email: str, password: str, number_machines: 
             report_time=report_time
         ).apply()
     except Exception as e:
-        logger.exception('Ошибка при обновлении всех параметров пользователя')
+        logger.exception(f'Ошибка при обновлении всех параметров пользователя: {e}')
 
 
 async def select_all_users():
@@ -396,15 +396,15 @@ async def select_all_users():
         users = await User_data.query.gino.all()
         return users
     except Exception as e:
-        logger.exception('Ошибка при выборе всех пользователей')
+        logger.exception(f'Ошибка при выборе всех пользователей: {e}')
 
 
-async def count_users():
+async def users_count():
     try:
         count = await db.func.count(User_data.user_id).gino.scalar()
         return count
     except Exception as e:
-        logger.exception('Ошибка при подсчете количества пользователей')
+        logger.exception(f'Ошибка при подсчете количества пользователей: {e}')
 
 
 async def update_status(user_id, status):
@@ -412,7 +412,7 @@ async def update_status(user_id, status):
         user = await select_user(user_id)
         await user.update(status=status).apply()
     except Exception as e:
-        logger.exception('Ошибка при обновлении статуса пользователя')
+        logger.exception(f'Ошибка при обновлении статуса пользователя: {e}')
 
 
 async def check_args(args, user_id: int):
@@ -437,7 +437,7 @@ async def check_args(args, user_id: int):
             args = '0'
             return args
     except Exception as e:
-        logger.exception('Ошибка при проверке аргументов')
+        logger.exception(f'Ошибка при проверке аргументов: {e}')
 
 
 async def balance_daily_write_off():
@@ -459,7 +459,7 @@ async def balance_daily_write_off():
         return True
 
     except Exception as e:
-        logger.exception('Ошибка при обновлении баланса пользователей')
+        logger.exception(f'Ошибка при обновлении баланса пользователей: {e}')
         return False
 
 
@@ -469,7 +469,7 @@ async def change_balance(user_id: int, amount):
         new_balance = float(user.balance) + float(amount)
         await user.update(balance=new_balance).apply()
     except Exception as e:
-        logger.exception('Ошибка при изменении баланса пользователя')
+        logger.exception(f'Ошибка при изменении баланса пользователя: {e}')
 
 
 async def check_balance(user_id: int, amount):
@@ -486,7 +486,7 @@ async def check_balance(user_id: int, amount):
             logger.exception(e)
             return False
     except Exception as e:
-        logger.exception('Ошибка при проверке баланса')
+        logger.exception(f'Ошибка при проверке баланса: {e}')
 
 
 async def user_balance(user_id: int):  # какой баланс у пользователя
@@ -494,6 +494,7 @@ async def user_balance(user_id: int):  # какой баланс у пользо
     try:
         return user.balance
     except Exception as e:
+        logger.exception(f'Ошибка user_balance: {e}')
         return False
 
 
@@ -502,7 +503,7 @@ async def user_bill_id(user_id: int):  # получаем идентификат
     return user.bill_id
 
 
-async def change_bill_id(user_id: int, value):  # измененяем идентификатор заказа
+async def change_bill_id(user_id: int, value):  # изменяем идентификатор заказа
     user = await select_user(user_id)
     new_bill_id = value
     await user.update(bill_id=new_bill_id).apply()
@@ -536,5 +537,5 @@ async def sufficient_balance(user_id: int) -> bool:
         else:
             return False
     except Exception as e:
-        logger.exception('Ошибка при проверке достаточности баланса')
+        logger.exception(f'Ошибка при проверке достаточности баланса: {e}')
         return False

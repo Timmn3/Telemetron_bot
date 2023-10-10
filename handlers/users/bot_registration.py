@@ -14,7 +14,7 @@ from loader import dp
 from message.send_mess import send_mess
 from parser.verification import main_authorize
 from states import Registration
-from utils.db_api.quick_commands import update_user, update_machines, get_user_email, get_tg_first_name, count_users
+from utils.db_api.quick_commands import update_user, update_machines, get_user_email, get_tg_first_name, users_count
 
 
 @dp.message_handler(text='Отменить регистрацию', state=[Registration.email, Registration.password,
@@ -166,7 +166,7 @@ async def get_report_time(message: types.Message, state: FSMContext):
         name = await get_tg_first_name(message.from_user.id)
 
         await send_mess(f'<b>Зарегистрирован новый пользователь: {name}\n'
-                        f'Всего пользователей: {await count_users()}</b>', admins)
+                        f'Всего пользователей: {await users_count()}</b>', admins)
 
     except ValueError:
         await message.answer('Некорректный формат времени. Пожалуйста, введите время в формате HH:MM:',
