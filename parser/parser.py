@@ -11,7 +11,7 @@ from loguru import logger
 from data.config import admins
 from message.send_mess import send_mess
 from message.send_report_to_user import send_report_to_user
-from utils.db_api.quick_commands import is_running, db_add_sales, sufficient_balance, db_run_stop
+from utils.db_api.quick_commands import is_running, add_sales_to_database, sufficient_balance, db_run_stop
 
 if platform.system() == 'Windows':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -47,11 +47,12 @@ class User:
             report_time (str): Время отправки отчета.
             send_users_id (int): Список пользователей для отправки сообщений
         """
-        self.error_data = True
-        self.last_data = None
+
         self.user_id, self.username, self.password, self.numbers_machines, self.names_machines, self.time_update, \
             self.report_time, self.send_users_id = args
 
+        self.error_data = True
+        self.last_data = None
         self.no_sales = False  # Флаг для отслеживания вывода информации об отсутствии продаж
         self.first_run = True  # Флаг для отслеживания первого запуска парсера
         self.machines_count = len(self.numbers_machines)  # Количество машин пользователя
@@ -71,7 +72,8 @@ class User:
             'client_secret': client_secret,
             'grant_type': 'password',
             'username': self.username,
-            'password': self.password
+            'password': self.password,
+            'User-Agent': UserAgent().random
         }
 
         async with session.post(auth_url, data=auth_data) as response:
@@ -98,7 +100,7 @@ class User:
 
         headers = {
             'Authorization': f'Bearer {access_token}',
-            'User-Agent': UserAgent().random
+            # 'User-Agent': UserAgent().random
         }
 
         async with session.get(page_url_2, headers=headers) as response:
@@ -146,7 +148,7 @@ class User:
                         name, price, time = item
                         result_string = f"#{name_machine}: \n<i>{time[1]}</i>  <u>{name}</u> <b>{price} ₽</b>"
                         result_bd = f"{name_machine}, {time[1]}, {name}, {price}"
-                        await db_add_sales(self.user_id, result_bd)
+                        await add_sales_to_database(self.user_id, result_bd)
                         # print(result_string)
                         await send_mess(result_string, self.send_users_id)
 
@@ -167,7 +169,7 @@ class User:
                             result_string = f"#{name_machine}: \n<i>{time}</i>  <u>{name}</u> " \
                                             f"<b>{price} ₽</b>"
                             result_bd = f"{name_machine}, {time}, {name}, {price}"
-                            if await db_add_sales(self.user_id, result_bd):
+                            if await add_sales_to_database(self.user_id, result_bd):
                                 await send_mess(result_string, self.send_users_id)
                                 self.last_data = time
 

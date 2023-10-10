@@ -37,6 +37,9 @@ class TimedBaseModel(BaseModel):
         onupdate=datetime.datetime.utcnow,
         server_default=db.func.now())
 
+
 async def on_startup(dispatcher: Dispatcher):
-    print('Установка связи с PostgreSQL')
+    """
+    Установка связи с PostgreSQL
+    """
     await db.set_bind(config.POSTGRES_URI)

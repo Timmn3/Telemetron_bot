@@ -14,15 +14,15 @@ async def on_startup(dp):
 
     from loader import db
     from utils.db_api.db_gino import on_startup
-    logger.info('Подключение к PostgreSQL')
+    # logger.info('Подключение к PostgreSQL')
     await on_startup(db)
 
     # print('Удаление базы данных')
     # await db.gino.drop_all()
 
-    logger.info('создание таблиц')
+    # logger.info('создание таблиц')
     await db.gino.create_all()
-    logger.info('Готово')
+    # logger.info('Готово')
 
     # устанавливаем всем пользователям False в is_run в БД
     await reset_all_users_is_run()
